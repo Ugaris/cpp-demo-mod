@@ -69,19 +69,26 @@ extern "C" {
     // Utilities
     int exp2level(int val);
 
-    // Game state
-    extern int hp;
-    extern int mana;
-    extern int gold;
-    extern int experience;
-    extern int value[2][V_MAX];
-    extern char username[40];
+    // Game state.
+    // On Windows, data (unlike functions) must be declared dllimport to be
+    // resolved through the client's import library - MSVC has no auto-import.
+#ifdef _WIN32
+#define CLIENT_DATA __declspec(dllimport)
+#else
+#define CLIENT_DATA
+#endif
+    CLIENT_DATA extern int hp;
+    CLIENT_DATA extern int mana;
+    CLIENT_DATA extern int gold;
+    CLIENT_DATA extern int experience;
+    CLIENT_DATA extern int value[2][V_MAX];
+    CLIENT_DATA extern char username[40];
 
     // Colors
-    extern uint16_t whitecolor;
-    extern uint16_t textcolor;
-    extern uint16_t healthcolor;
-    extern uint16_t manacolor;
+    CLIENT_DATA extern uint16_t whitecolor;
+    CLIENT_DATA extern uint16_t textcolor;
+    CLIENT_DATA extern uint16_t healthcolor;
+    CLIENT_DATA extern uint16_t manacolor;
 }
 
 // ============================================================================
