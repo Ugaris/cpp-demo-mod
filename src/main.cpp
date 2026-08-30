@@ -18,9 +18,16 @@
 
 // Platform-specific export macro
 #ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
+    #define DLL_EXPORT __declspec(dllexport)
+    #define DLL_IMPORT extern
 #else
-#define DLL_EXPORT __attribute__((visibility("default")))
+    #if __GNUC__ >= 4 || defined(__clang__)
+        #define DLL_EXPORT __attribute__((visibility("default")))
+    #else
+        #define DLL_EXPORT
+    #endif
+    /* extern ensures variables are declarations, not tentative definitions */
+    #define DLL_IMPORT extern
 #endif
 
 // ============================================================================

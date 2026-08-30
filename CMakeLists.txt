@@ -18,12 +18,16 @@ if(WIN32)
         PREFIX ""
         SUFFIX ".dll"
     )
-    # Windows: Allow undefined symbols (resolved at runtime by host application)
-    if(MSVC)
-        target_link_options(${MOD_OUTPUT_NAME} PRIVATE /FORCE:UNRESOLVED)
+    # Windows: link the client's import library (lib/moac.lib or moac.a from
+    # the client release's mod-sdk.zip). A DLL built with unresolved client
+    # symbols (/FORCE:UNRESOLVED) loads, but the first client API call jumps
+    # to a null pointer and crashes the game.
+    if(EXISTS "${CMAKE_SOURCE_DIR}/lib/moac.a" AND NOT MSVC)
+        target_link_libraries(${MOD_OUTPUT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/lib/moac.a")
+    elseif(EXISTS "${CMAKE_SOURCE_DIR}/lib/moac.lib")
+        target_link_libraries(${MOD_OUTPUT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/lib/moac.lib")
     else()
-        # MinGW
-        target_link_options(${MOD_OUTPUT_NAME} PRIVATE -Wl,--allow-shlib-undefined)
+        message(FATAL_ERROR "Windows builds need lib/moac.lib (or lib/moac.a) from the client mod-sdk.zip - see README")
     endif()
 elseif(APPLE)
     set_target_properties(${MOD_OUTPUT_NAME} PROPERTIES

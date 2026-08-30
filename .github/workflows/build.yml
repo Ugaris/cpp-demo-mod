@@ -25,6 +25,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Fetch client import library (Windows)
+        if: matrix.platform == 'windows'
+        shell: bash
+        run: |
+          # Windows mods must link the client's import library; a DLL with
+          # unresolved client symbols crashes the game on the first API call.
+          curl -fsSL -o mod-sdk.zip \
+            "https://github.com/eddoww/astonia_community_client/releases/download/v1.2.39/mod-sdk.zip"
+          unzip -oq mod-sdk.zip
+          mkdir -p lib
+          cp mod-sdk/lib/moac.a mod-sdk/lib/moac.lib lib/
+
       - name: Build (Windows)
         if: matrix.platform == 'windows'
         run: |
