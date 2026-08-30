@@ -77,11 +77,12 @@ extern "C" {
 #else
 #define CLIENT_DATA
 #endif
-    CLIENT_DATA extern int hp;
-    CLIENT_DATA extern int mana;
-    CLIENT_DATA extern int gold;
-    CLIENT_DATA extern int experience;
-    CLIENT_DATA extern int value[2][V_MAX];
+    // Current client types: stats and value[] are 16-bit, exp/gold u32.
+    CLIENT_DATA extern uint16_t hp;
+    CLIENT_DATA extern uint16_t mana;
+    CLIENT_DATA extern uint32_t gold;
+    CLIENT_DATA extern uint32_t experience;
+    CLIENT_DATA extern uint16_t value[2][V_MAX];
     CLIENT_DATA extern char username[40];
 
     // Colors
