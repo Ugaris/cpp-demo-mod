@@ -12,6 +12,11 @@ add_library(${MOD_OUTPUT_NAME} SHARED
     src/main.cpp
 )
 
+# The SDK headers (struct amod_option for the Options > Mods rows)
+target_include_directories(${MOD_OUTPUT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+)
+
 # Platform-specific settings
 if(WIN32)
     set_target_properties(${MOD_OUTPUT_NAME} PROPERTIES
