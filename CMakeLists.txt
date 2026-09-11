@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Output name
-set(MOD_OUTPUT_NAME "bmod")
+set(MOD_OUTPUT_NAME "cpp_demo_mod")
 
 # Create shared library
 add_library(${MOD_OUTPUT_NAME} SHARED
