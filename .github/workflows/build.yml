@@ -11,13 +11,13 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            artifact: bmod.dll
+            artifact: cpp_demo_mod.dll
             platform: windows
           - os: macos-latest
-            artifact: bmod.dylib
+            artifact: cpp_demo_mod.dylib
             platform: macos
           - os: ubuntu-latest
-            artifact: bmod.so
+            artifact: cpp_demo_mod.so
             platform: linux
 
     runs-on: ${{ matrix.os }}
@@ -42,7 +42,7 @@ jobs:
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
-          cp build/Release/bmod.dll bmod.dll
+          cp build/Release/cpp_demo_mod.dll cpp_demo_mod.dll
 
       - name: Build (macOS)
         if: matrix.platform == 'macos'
@@ -50,14 +50,14 @@ jobs:
           cmake -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
           cmake --build build
-          cp build/bmod.dylib bmod.dylib
+          cp build/cpp_demo_mod.dylib cpp_demo_mod.dylib
 
       - name: Build (Linux)
         if: matrix.platform == 'linux'
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
-          cp build/bmod.so bmod.so
+          cp build/cpp_demo_mod.so cpp_demo_mod.so
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -82,15 +82,15 @@ jobs:
       - name: Organize release files
         run: |
           mkdir -p release
-          cp artifacts/windows/bmod.dll release/
-          cp artifacts/macos/bmod.dylib release/
-          cp artifacts/linux/bmod.so release/
+          cp artifacts/windows/cpp_demo_mod.dll release/
+          cp artifacts/macos/cpp_demo_mod.dylib release/
+          cp artifacts/linux/cpp_demo_mod.so release/
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/bmod.dll
-            release/bmod.dylib
-            release/bmod.so
+            release/cpp_demo_mod.dll
+            release/cpp_demo_mod.dylib
+            release/cpp_demo_mod.so
           generate_release_notes: true
