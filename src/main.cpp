@@ -52,6 +52,11 @@ constexpr uint16_t IRGB(uint16_t r, uint16_t g, uint16_t b) {
 // FFI Declarations
 // ============================================================================
 
+// The one SDK header this demo includes: struct amod_option is deliberately
+// layout-frozen (see the comment in it), so hand-declaring it here would be a
+// drift waiting to happen. The header is self-contained - no other includes.
+#include "amod/amod_options.h"
+
 extern "C" {
     // Logging
     int note(const char* format, ...);
@@ -124,6 +129,36 @@ private:
 // ============================================================================
 
 extern "C" {
+
+// ---- Settings in Options > Mods -------------------------------------------
+// Export these three and the client draws your settings under your mod's name
+// in the Mods tab. It reads them every frame it draws them, and never saves
+// them for you - persist anything you care about under client_config_dir().
+DLL_EXPORT int amod_options_count() {
+    return 2;
+}
+
+DLL_EXPORT int amod_option_get(int index, struct amod_option* out) {
+    std::memset(out, 0, sizeof(*out));
+    switch (index) {
+    case 0:
+        out->type = AMOD_OPT_HEADER;
+        std::snprintf(out->label, sizeof(out->label), "C++ Demo");
+        return 1;
+    case 1:
+        out->type = AMOD_OPT_TOGGLE;
+        out->value = show_overlay.load(std::memory_order_relaxed) ? 1 : 0;
+        std::snprintf(out->label, sizeof(out->label), "Show overlay");
+        return 1;
+    }
+    return 0;
+}
+
+DLL_EXPORT void amod_option_set(int index, int value) {
+    if (index == 1) {
+        show_overlay.store(value != 0, std::memory_order_relaxed);
+    }
+}
 
 DLL_EXPORT const char* amod_version() {
     return "C++ Demo Mod 1.0.0";
